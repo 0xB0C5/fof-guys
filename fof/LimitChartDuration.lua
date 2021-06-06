@@ -1,3 +1,9 @@
+local is_multiplayer = #GAMESTATE:GetHumanPlayers() > 1
+
+if is_multiplayer then
+	return Def.ActorFrame {}
+end
+
 return Def.ActorFrame {
 	InitCommand=function(self)
 		self:xy(SCREEN_CENTER_X, 0.1*SCREEN_HEIGHT)

@@ -24,6 +24,8 @@ GoalSystem.update = function(ECS)
 			if
 				abs(dx) < half_width and abs(dy) < half_height and abs(dz) < half_depth
 			then
+				GoalSystem.winner = ball_entity.input.player
+			
 				local spawn_position = ball_entity.ball.spawn_position
 
 				ECS.stop()

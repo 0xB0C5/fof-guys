@@ -62,12 +62,22 @@ return Def.ActorFrame {
 			end
 		end,
 		EndChartCommand=function(self)
-			local sTable = GAMESTATE:GetCurrentSong():GetStepsByStepsType('StepsType_Dance_Single')
-			for _, player in ipairs(GAMESTATE:GetHumanPlayers()) do
-				for _,steps in ipairs(sTable) do
-					if steps:GetDifficulty() == 'Difficulty_Hard' then
-						GAMESTATE:SetCurrentSteps(player, steps)
-						break
+			local is_multiplayer = #GAMESTATE:GetHumanPlayers() > 1
+			local stepses = GAMESTATE:GetCurrentSong():GetStepsByStepsType('StepsType_Dance_Single')
+			for player_index=1,2 do
+				local player_number = 'PlayerNumber_P' .. player_index
+				if GAMESTATE:IsHumanPlayer(player_number) then
+					local target_difficulty
+					if is_multiplayer then
+						target_difficulty = GoalSystem.winner == player_index and 'Difficulty_Easy' or 'Difficulty_Medium'
+					else
+						target_difficulty = 'Difficulty_Hard'
+					end
+					for _,steps in ipairs(stepses) do
+						if steps:GetDifficulty() == target_difficulty then
+							GAMESTATE:SetCurrentSteps(player_number, steps)
+							break
+						end
 					end
 				end
 			end

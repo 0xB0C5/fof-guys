@@ -1,23 +1,5 @@
 local modules = ...
 
-local function dump_mesh(mesh)
-	local file = RageFileUtil.CreateRageFile()
-	file:Open('mesh.obj', 2)
-
-	for _, v in ipairs(mesh.verts) do
-		file:Write('v ' .. v[1] .. ' ' .. v[2] .. ' ' .. v[3] .. '\n')
-	end
-
-	for _, v in ipairs(mesh.uv) do
-		file:Write('vt ' .. v[1] .. ' ' .. v[2] .. '\n')
-	end
-
-	for i=1,#mesh.indices,4 do
-		file:Write('f ' .. mesh.indices[i] .. ' ' .. mesh.indices[i+1] .. ' ' .. mesh.indices[i+2] .. ' ' .. mesh.indices[i+3] .. '\n')
-	end
-	file:Close()
-end
-
 local function build_floor_mesh()
 	local verts = {}
 	local indices = {}
@@ -751,28 +733,11 @@ local function build_floor_mesh()
 		indices=indices,
 		uv=uv,
 	}
-	dump_mesh(mesh)
 	return mesh
 end
 
 local GateCrashLevel = {
-	{
-		transform={position={-2,2,0},rotation={0,0}},
-		ball={radius=0.65,bounce_height=4,spawn_position={0,2,0}},
-		physics={velocity={0,0,0},gravity=true},
-		input={player=1},
-	},
-	{
-		transform={position={2,2,0},rotation={0,0}},
-		ball={radius=0.65,bounce_height=4,spawn_position={0,2,0}},
-		physics={velocity={0,0,0},gravity=true},
-		input={player=2},
-	},
-	{
-		transform={position={0,5,-20},rotation={0.195,0}},
-		camera={},
-		follow={target_ids={1,2}},
-	},
+	-- FLOOR GRAPHICS
 	{
 		transform={position={0,0,0}},
 		mesh=build_floor_mesh(),
@@ -1571,5 +1536,40 @@ local GateCrashLevel = {
 		},
 	},
 }
+
+
+
+local p1_enabled = GAMESTATE:IsHumanPlayer('PlayerNumber_P1')
+local p2_enabled = GAMESTATE:IsHumanPlayer('PlayerNumber_P2')
+
+if p1_enabled then
+	GateCrashLevel[#GateCrashLevel+1] = {
+		transform={position={p2_enabled and -2 or 0,2,0},rotation={0,0}},
+		ball={radius=0.65,bounce_height=4,spawn_position={0,2,0}},
+		physics={velocity={0,0,0},gravity=true},
+		input={player=1},
+	}
+	local p1_entity_id = #GateCrashLevel
+	GateCrashLevel[#GateCrashLevel+1] = {
+		transform={position={0,5,-20},rotation={0.195,0}},
+		camera={player_index=1},
+		follow={target_id=p1_entity_id,offset={0,15,-50}},
+	}
+end
+
+if p2_enabled then
+	GateCrashLevel[#GateCrashLevel+1] = {
+		transform={position={p2_enabled and 2 or 0,2,0},rotation={0,0}},
+		ball={radius=0.65,bounce_height=4,spawn_position={0,2,0}},
+		physics={velocity={0,0,0},gravity=true},
+		input={player=2},
+	}
+	local p2_entity_id = #GateCrashLevel
+	GateCrashLevel[#GateCrashLevel+1] = {
+		transform={position={0,5,-20},rotation={0.195,0}},
+		camera={player_index=2},
+		follow={target_id=p2_entity_id,offset={0,15,-50}},
+	}
+end
 
 return GateCrashLevel
