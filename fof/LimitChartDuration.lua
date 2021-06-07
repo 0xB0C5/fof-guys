@@ -3,7 +3,7 @@ local is_multiplayer = FOF_GUYS_GLOBAL_STATE.is_player_joined[1] and FOF_GUYS_GL
 return Def.ActorFrame {
 	InitCommand=function(self)
 		if is_multiplayer then
-			self:xy(SCREEN_CENTER_X, SCREEN_CENTER_Y + 0.02*SCREEN_HEIGHT)
+			self:xy(SCREEN_CENTER_X, SCREEN_CENTER_Y)
 			self:zoom(0.75)
 		else
 			self:xy(SCREEN_CENTER_X, 0.1*SCREEN_HEIGHT)

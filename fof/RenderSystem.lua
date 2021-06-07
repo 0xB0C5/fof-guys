@@ -48,7 +48,7 @@ if is_multiplayer then
 		0,
 	}
 	y_max_by_player = {
-		0,
+		10,
 		SCREEN_HEIGHT,
 	}
 else
@@ -131,6 +131,16 @@ RenderSystem.init = function(ECS)
 				end,
 			}
 		end
+	end
+
+	if is_multiplayer then
+		actor_defs[#actor_defs+1] = Def.Quad {
+			InitCommand=function(self)
+				self:zoomtowidth(SCREEN_WIDTH)
+				self:zoomtoheight(20)
+				self:diffuse({0, 0.1, 0.1, 1})
+			end,
+		}
 	end
 
 	for i=1,#actor_defs do
