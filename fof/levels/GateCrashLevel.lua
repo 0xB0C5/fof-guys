@@ -803,8 +803,8 @@ local GateCrashLevel = {
 	
 	-- Checkpoint
 	{
-		transform={position={0,2,206}},
-		checkpoint={half_size={30,4,5}},
+		transform={position={0,4,206}},
+		checkpoint={half_size={30,8,5}},
 	},
 
 	-- Goal
@@ -1537,10 +1537,8 @@ local GateCrashLevel = {
 	},
 }
 
-
-
-local p1_enabled = GAMESTATE:IsHumanPlayer('PlayerNumber_P1')
-local p2_enabled = GAMESTATE:IsHumanPlayer('PlayerNumber_P2')
+local p1_enabled = FOF_GUYS_GLOBAL_STATE.is_player_joined[1]
+local p2_enabled = FOF_GUYS_GLOBAL_STATE.is_player_joined[2]
 
 if p1_enabled then
 	GateCrashLevel[#GateCrashLevel+1] = {
@@ -1559,7 +1557,7 @@ end
 
 if p2_enabled then
 	GateCrashLevel[#GateCrashLevel+1] = {
-		transform={position={p2_enabled and 2 or 0,2,0},rotation={0,0}},
+		transform={position={p1_enabled and 2 or 0,2,0},rotation={0,0}},
 		ball={radius=0.65,bounce_height=4,spawn_position={0,2,0}},
 		physics={velocity={0,0,0},gravity=true},
 		input={player=2},

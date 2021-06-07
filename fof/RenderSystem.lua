@@ -27,7 +27,7 @@ local scene_actors = {{},{}}
 
 local human_player_indices = {}
 for player_index=1,2 do
-	if GAMESTATE:IsHumanPlayer('PlayerNumber_P' .. player_index) then
+	if FOF_GUYS_GLOBAL_STATE.is_player_joined[player_index] then
 		human_player_indices[#human_player_indices + 1] = player_index
 	end
 end
@@ -40,7 +40,7 @@ local y_max_by_player
 
 if is_multiplayer then
 	y_offset_by_player = {
-		-0.25*SCREEN_HEIGHT,
+		-0.27*SCREEN_HEIGHT,
 		0.25*SCREEN_HEIGHT,
 	}
 	y_min_by_player = {

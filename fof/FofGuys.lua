@@ -35,6 +35,8 @@ local systems = {
 
 ECS.init(level, systems)
 
+local is_multiplayer = FOF_GUYS_GLOBAL_STATE.is_player_joined[1] and FOF_GUYS_GLOBAL_STATE.is_player_joined[2]
+
 return Def.ActorFrame {
 	OnCommand=function(self)
 		modules.Audio.play('music')
@@ -43,7 +45,7 @@ return Def.ActorFrame {
 
 		self:sleep(9999)
 	end,
-	LoadActor('img/bg.png') .. {
+	LoadActor(is_multiplayer and 'img/bg2.png' or 'img/bg.png') .. {
 		InitCommand=function(self)
 			self:xy(SCREEN_CENTER_X, SCREEN_CENTER_Y)
 			self:zoomtowidth(SCREEN_WIDTH)
@@ -62,18 +64,22 @@ return Def.ActorFrame {
 			end
 		end,
 		EndChartCommand=function(self)
-			local is_multiplayer = #GAMESTATE:GetHumanPlayers() > 1
 			local stepses = GAMESTATE:GetCurrentSong():GetStepsByStepsType('StepsType_Dance_Single')
+
 			for player_index=1,2 do
 				local player_number = 'PlayerNumber_P' .. player_index
 				if GAMESTATE:IsHumanPlayer(player_number) then
 					local target_difficulty
-					if is_multiplayer then
-						target_difficulty = GoalSystem.winner == player_index and 'Difficulty_Easy' or 'Difficulty_Medium'
+					if GoalSystem.winner == player_index then
+						if is_multiplayer then
+							target_difficulty = 'Difficulty_Easy'
+						else
+							target_difficulty = 'Difficulty_Hard'
+						end
 					else
-						target_difficulty = 'Difficulty_Hard'
+						target_difficulty = 'Difficulty_Medium'
 					end
-					for _,steps in ipairs(stepses) do
+					for _, steps in ipairs(stepses) do
 						if steps:GetDifficulty() == target_difficulty then
 							GAMESTATE:SetCurrentSteps(player_number, steps)
 							break

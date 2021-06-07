@@ -18,7 +18,7 @@ InputSystem.handle_input = function(event)
 	local player_index = event.PlayerNumber == 'PlayerNumber_P2' and 2 or 1
 	if event.type == "InputEventType_Release" then
 		held_buttons[player_index][event.button] = nil
-	elseif event.type == "InputEventType_FirstPress" then
+	elseif event.type == "InputEventType_FirstPress" or event.type == "InputEventType_Repeat" then
 		held_buttons[player_index][event.button] = true
 	end
 end
@@ -60,12 +60,13 @@ InputSystem.update = function(ECS)
 		local speed = 0.3
 		local accel = 0.01
 
+		--[[
 		if player_buttons['Select'] then
 			velocity[2] = 0.1
 			speed = 1
 			accel = 0.05
 		end
-
+		]]--
 
 		if entity.ball.slippy then
 			accel = 0.003
