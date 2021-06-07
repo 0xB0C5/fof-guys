@@ -29,4 +29,19 @@ else
 	fof = LoadActor('FofGuys.lua')
 end
 
+fof[#fof+1] = Def.Actor {
+	OnCommand=function(self)
+		-- Set both players' difficulties to Challenge, so that after the chart finishes they'll still be on Challenge.
+		local stepses = GAMESTATE:GetCurrentSong():GetStepsByStepsType('StepsType_Dance_Single')
+		for _, player in ipairs(GAMESTATE:GetHumanPlayers()) do
+			for _,steps in ipairs(stepses) do
+				if steps:GetDifficulty() == 'Difficulty_Challenge' then
+					GAMESTATE:SetCurrentSteps(player, steps)
+					break
+				end
+			end
+		end
+	end,
+}
+
 return fof
